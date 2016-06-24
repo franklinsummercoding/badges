@@ -93,7 +93,7 @@ BadgeTable = React.createClass({
     return (
       <div className="ui segment">
         <h1 className="ui header">
-          Franklin Summer Coding!!!
+          Franklin Innovation Academy 2016
         </h1>
         <table className="ui very basic collapsing celled fluid table">
           <thead>
@@ -129,7 +129,7 @@ BadgeTable = React.createClass({
                       this.props.info.badges.map(function(badge){
                         return(
                           <td key={badge.id}>
-                            <Award user={this.props.user} bidge={badge} student={student} />
+                            <Award user={this.props.user} badge={badge} student={student} parent={this.props.parent}/>
                           </td>
                         )
                       }.bind(this))
@@ -204,7 +204,6 @@ StudentGenerator = React.createClass({
 
           $(ReactDOM.findDOMNode(this)).find('.fname').val("").focus();
           $(ReactDOM.findDOMNode(this)).find('.lname').val("");
-
         }.bind(this)
       })
     }
@@ -232,8 +231,7 @@ StudentGenerator = React.createClass({
       </div>
     );
   }
-})
-
+});
 
 BadgesGenerator = React.createClass({
   checkForEnter(e){
@@ -288,11 +286,53 @@ BadgesGenerator = React.createClass({
 })
 
 Award = React.createClass({
+  componentDidMount(){
+    if (this.props.student.badges.indexOf(this.props.badge.id) >= 0) {
+      var medal = emojione.shortnameToImage(":first_place_medal:")
+      $(ReactDOM.findDOMNode(this)).find('.badge-here').html(medal);
+    }
+  },
+
+  toggleBadge(){
+    if ($(ReactDOM.findDOMNode(this)).find('.badge-here').html()) {
+      // destroy
+      $.ajax({
+        url: '/api/awards/1',
+        type: 'DELETE',
+        data: {
+          award: {
+            student_id: this.props.student.id,
+            badge_id: this.props.badge.id,
+          }
+        },
+        success: function (model, resp, object) {
+          location.href = '/'
+        }.bind(this)
+      })
+    } else {
+      // create
+      $.ajax({
+        url: '/api/awards/',
+        type: 'POST',
+        data: {
+          award: {
+            student_id: this.props.student.id,
+            badge_id: this.props.badge.id,
+          }
+        },
+        success: function (model, resp, object) {
+          location.href = '/'
+        }.bind(this)
+      })
+    }
+
+  },
+
   render: function() {
-    var medal = emojione.shortnameToImage(":first_place_medal:")
     return (
-      <div>
-        {}
+      <div onClick={this.toggleBadge} style={{"height":"40px","fontSize":"28px","textAlign":"center"}}>
+        <div className="badge-here">
+        </div>
       </div>
     );
   }

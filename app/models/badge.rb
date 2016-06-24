@@ -1,7 +1,7 @@
 class Badge < ActiveRecord::Base
   validates :title, :description, presence: true
-  has_many :awards
-  has_many :students, through: :awards, source: :students
+  has_many :awards, dependent: :destroy
+  has_many :students, through: :awards, source: :students, dependent: :destroy
 
   def safe_show
     {

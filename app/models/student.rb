@@ -1,7 +1,8 @@
 class Student < ActiveRecord::Base
   validates :fname, :lname, :avatar, presence: true
-  has_many :awards
-  has_many :badges, through: :awards, source: :badge
+  has_many :awards, dependent: :destroy
+  has_many :badges, through: :awards, source: :badge, dependent: :destroy
+
 
   def getBadges
 
