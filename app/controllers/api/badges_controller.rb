@@ -9,6 +9,12 @@ module Api
       end
     end
 
+    def destroy
+      @badge = Badge.find(params[:id])
+      @badge.try(:delete)
+      render json: User.safe_show
+    end
+
     def badge_params
       params.require(:badge).permit(:title, :description)
     end

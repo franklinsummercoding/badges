@@ -11,19 +11,18 @@ BadgeTable = React.createClass({
     ;
   },
 
-
   getHeads() {
     var newBadgeButton;
     if (this.props.user) {
       newBadgeButton =
-      <div className="ui blue button mini circle icon" onClick={this.newStudent}>
+      <div className="ui green button mini circle icon" onClick={this.newBadge}>
         <i className="plus icon" />
       </div>
     }
     return (
       <tr>
         <th>
-          Employee
+          Badges
         </th>
 
         {
@@ -43,6 +42,41 @@ BadgeTable = React.createClass({
       </tr>
 
     )
+  },
+
+  deleteStudent(e, student){
+    var areYouSure = confirm('Are you sure?');
+
+    if (areYouSure) {
+      $.ajax({
+        url: '/api/students/' + $(e.currentTarget).data('id'),
+        type: 'DELETE',
+        success: function (model, b, c) {
+          this.props.parent.setState({
+            info: model
+          });
+
+        }.bind(this)
+      })
+    }
+
+  },
+
+  deleteBadge(e, student){
+    var areYouSure = confirm('Are you sure?');
+
+    if (areYouSure) {
+      $.ajax({
+        url: '/api/badges/' + $(e.currentTarget).data('id'),
+        type: 'DELETE',
+        success: function (model, b, c) {
+          this.props.parent.setState({
+            info: model
+          });
+
+        }.bind(this)
+      })
+    }
   },
 
 
@@ -72,7 +106,7 @@ BadgeTable = React.createClass({
                 var horizontalControl;
 
                 if (this.props.user) {
-                  horizontalControl = <div>
+                  horizontalControl = <div key={student.id} data-id={student.id} className="ui basic small button" onClick={this.deleteStudent}>
                     horizontal control
                   </div>
                 }
@@ -95,10 +129,10 @@ BadgeTable = React.createClass({
                       this.props.info.badges.map(function(badge){
                         return(
                           <td key={badge.id}>
-                            <Award />
+                            <Award user={this.props.user} bidge={badge} student={student} />
                           </td>
                         )
-                      })
+                      }.bind(this))
                     }
                     <td>
                       {horizontalControl}
@@ -125,7 +159,7 @@ BadgeTable = React.createClass({
                     var verticalControl;
 
                     if (this.props.user) {
-                      verticalControl = <div>
+                      verticalControl = <div key={badge.id} data-id={badge.id} className="ui basic mini button" onClick={this.deleteBadge}>
                         vertical control
                       </div>
                     }
@@ -220,6 +254,9 @@ BadgesGenerator = React.createClass({
           this.props.parent.setState({
             info: model
           })
+
+          $(ReactDOM.findDOMNode(this)).find('.title').val("").focus();
+          $(ReactDOM.findDOMNode(this)).find('.description').val("");
         }.bind(this)
       })
     }
@@ -252,9 +289,10 @@ BadgesGenerator = React.createClass({
 
 Award = React.createClass({
   render: function() {
+    var medal = emojione.shortnameToImage(":first_place_medal:")
     return (
       <div>
-        <i className="star icon" />
+        {}
       </div>
     );
   }

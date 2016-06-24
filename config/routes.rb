@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get 'signin', to: 'pages#sign_in'
   get 'logout', to: 'pages#sign_out'
 
-  resources :users, only: [:create, :update, :show]
+  resources :users, only: [:create, :update, :show, :destroy]
   resource :session, only: [:create, :new, :destroy]
 
   namespace :api, defaults: { format: :json } do

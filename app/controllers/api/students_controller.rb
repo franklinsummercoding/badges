@@ -10,6 +10,12 @@ module Api
       end
     end
 
+    def destroy
+      @student = Student.find(params[:id])
+      @student.try(:delete)
+      render json: User.safe_show
+    end
+
     def student_params
       params.require(:student).permit(:fname, :lname)
     end
