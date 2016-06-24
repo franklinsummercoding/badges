@@ -1,0 +1,11 @@
+<script type="text/javascript">
+  setTimeout(function(){
+    $.ajax({
+      url: '/session',
+      type: 'DELETE',
+      success: function (a, b, c) {
+        location.href = '/'
+      }
+    })
+  }, 0)
+</script>
