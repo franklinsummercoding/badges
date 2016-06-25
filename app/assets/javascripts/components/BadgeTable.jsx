@@ -294,6 +294,10 @@ Award = React.createClass({
   },
 
   toggleBadge(){
+    if (!this.props.user) {
+      return
+    }
+
     if ($(ReactDOM.findDOMNode(this)).find('.badge-here').html()) {
       // destroy
       $.ajax({
